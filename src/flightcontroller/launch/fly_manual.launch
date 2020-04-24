@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="map_file" default="map_medium0.yaml"/>
+  <include file="$(find flightgoggles)/launch/core.launch">
+  </include>
+
+  <include file="$(find visualizer)/launch/view.launch">
+  </include>
+
+  <include file="$(find flightcontroller)/launch/angle.launch">
+  </include>
+
+  <include file="$(find flightcontroller)/launch/velocity.launch">
+  </include>
+
+  <include file="$(find flightcontroller)/launch/position.launch">
+  </include>
+
+  <node name="state_safety_node" pkg="simple_control" type="state_and_safety.py" output="screen">
+    <param name="virtual_cage/x" type="double" value="10" />
+    <param name="virtual_cage/y" type="double" value="10" />
+    <param name="virtual_cage/z" type="double" value="10" />
+    <param name="acceptance_range" type="double" value="0.25" />
+  </node>
+  <node name="keyboard_manager_node" pkg="simple_control" type="keyboard_manager.py" output="screen"/>
+  <node name="keyboard" pkg="keyboard" type="keyboard"/>
+
+  <node name="pressure_sensor" pkg="sensor_simulators" type="pressure.py"/>
+  <node name="pressure_altitude_node" pkg="altitude" type="pressure_altitude_node.py"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find flightcontroller)/maps/$(arg map_file)"/>
+  <node name="tower" pkg="flightcontroller" type="tower.py" />
+</launch>

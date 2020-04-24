@@ -1,0 +1,28 @@
+<launch>
+  <!-- Launch settings. To be passed into launch file. -->
+  <arg name="use_dynamics" default="1" />
+  <arg name="ignore_collisions" default="false" />
+
+  <group ns="/uav">
+
+    <!-- Use clock scaling -->
+    <param name="/use_sim_time" value="true" />
+   
+    <!-- Read required yaml files" / --> 
+    <rosparam command="load" file="$(find flightgoggles)/config/drone/drone.yaml"/>
+    <!-- <rosparam command="load" file="$(find flightgoggles)/config/challenges/nominal_gate_locations.yaml"/> -->
+
+    <!-- Environment Creator -->
+    <!-- flightgoggles_uav_dynamics simulator -->
+    <!--Will not be run if playing back previous flight from rosbag-->
+    <node name="flightgoggles_uav_dynamics" pkg="flightgoggles_uav_dynamics" type="node"
+          if="$(arg use_dynamics)" output="screen">
+      <param name="ignore_collisions" type="bool" value="$(arg ignore_collisions)" />
+    </node>
+
+    <!--Static transform for ENU to NED world-->
+    <node pkg="tf2_ros" type="static_transform_publisher"
+          name="world_ned_link" args="0 0 0 1.57079632679 3.14159265359 0 'world' 'world/ned'"/>
+
+  </group>
+</launch>

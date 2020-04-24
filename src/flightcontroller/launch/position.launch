@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="flightcontroller" type="position_controller.py" name="position_controller_node" output="screen">
+    <param name="gains/stable/p" type="double" value="1.3" />
+    <param name="gains/stable/i" type="double" value="0" />
+    <param name="gains/stable/d" type="double" value="0" />
+  </node>
+
+</launch>
